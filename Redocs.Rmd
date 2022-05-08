@@ -1,0 +1,172 @@
+crm = read.csv(file.choose(), header = T)
+
+summary(crm)
+
+attach(crm)
+
+dim(crm)
+
+attach(crm)
+
+class(ï..gender)
+
+table(ï..gender)
+
+count = table(ï..gender)
+count
+
+table(ï..gender)/1500
+percent = table(ï..gender)/1500
+percent
+
+barplot(count)
+barplot(percent)
+barplot(percent, main="Gender Distribution")
+mean(crm$year_of_birth)
+summary(year_of_birth)
+
+#it is evidence we have a higher proportion of active male users than female, we also have a higher value of Prepaid users compare to postpaid user
+
+#Drilling further into the Mobile Type of subscribers
+class(mobile_type)
+
+table(mobile_type)
+
+#In terms of percentage values we have the following values
+table(mobile_type)/1500
+
+#User status
+class(system_status)
+
+table(system_status)
+#the system status has 11 suspended, and 1489 is active user
+# In sumation we have higher number of Male subscribers than Female, and they are high Prepaid users the median date of birth is 1984
+
+#Moving to consider the revenue flow
+
+revenue = read.csv(file.choose(), header = T)
+
+view(revenue)
+
+dim(revenue)
+
+names(revenue)
+
+summary(revenue)
+#This summary shows how the of revenue and also the highest income achieve that is 25.79 and minimun of 0.2053, the Quartile intervals showing the 1st, 2nd and 3rd interval, highest income came on week 33, total value at 1,471.5557
+
+#Reviewing the devices 
+
+device = read.csv(file.choose(), header = T)
+
+names(device)
+
+class(ï..brand_name)
+
+table(ï..brand_name)
+#Samsung has the highest number brand performing in the market with 505 device sold in total
+
+class(model_name)
+table(model_name)
+#The highest selling single model is GURU MUSIC II (SM-B310E) with 47 Units
+
+class(os_name)
+table(os_name)
+#From the distribution as shown the highest performing Operation system is Andriod OS with a value 1059
+
+class(os_vendor)
+table(os_vendor)
+
+#highest performing vendor is Google with a value 1,059
+
+
+#For a linear model of Revenue and weekly of highest sales
+
+Model = read.csv(file.choose(), header=T)
+
+names(Model)
+
+cor(Model$Week, Model$Revenue)
+
+cor(Model$YOB, Model$Revenue)
+
+Cor(Model$YOB, Model$Week)
+
+#we have a very low correlation between the revenue and weeks, an also between Year of Birth and Revenue values from this outcome and no correlation between Year of Birth and Week.
+
+plot(Model$Week, Model$Revenue)
+
+#I will take a sample size of 30 percent of correlation test
+
+ThirtyPer = read.csv(file.choose(), header=T)
+names(ThirtyPer)
+cor(ThirtyPer$Week, ThirtyPer$Revenue)
+
+#From Observation using 30% of tge Data the correlation has improving to 0.065 Let's check the Plot view
+plot(ThirtyPer$Week, ThirtyPer$Revenue)
+plot(ThirtyPer$Revenue, ThirtyPer$Week)
+
+#Although the Correlation has improved, the values show some points of correlation
+
+#First Model Week = Revenue
+RevenueModel = lm(Week ~ Revenue, data = ThirtyPer)
+RevenueModel
+
+#Second Model of Revenue=Week
+
+WeekModel = lm(Revenue ~ Week, data = ThirtyPer)
+WeekModel
+
+#From the model we can see the intercepts that exist between Revenue and Week, For First Model, higher intercepts and lower for Second Model, for both lines are respectively Slope of 0.008938 and 0.4752 
+
+#Linear model: y = 22.945281 + (0.008938 * x), Then Alternative y = 0.3921 + (0.4752 * x)
+abline(RevenueModel)
+summary(RevenueModel)
+#summary infromation Residuals:
+#     Min       1Q   Median       3Q      Max 
+#-1.12887 -0.98434 -0.03198  0.91712  1.04444 
+
+#Coefficients:
+#             Estimate Std. Error t value Pr(>|t|)    
+#(Intercept) 22.945281   0.101416 226.248   <2e-16 ***
+#Revenue      0.008938   0.007928   1.127     0.26    
+#---
+#Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#Residual standard error: 0.812 on 298 degrees of freedom
+#Multiple R-squared:  0.004247,	Adjusted R-squared:  0.0009056 
+#F-statistic: 1.271 on 1 and 298 DF,  p-value: 0.2605
+
+#Fitted values for x axis- Revenue
+RevenueModel$fitted
+fitted(RevenueModel)
+
+#plot chart revenue Fitted Lines
+plot(ThirtyPer$Revenue, RevenueModel$fitted)
+
+#Making Actual Predictions using any of the following approach
+#Manually
+22.9452814+0.0089379*300
+#value 25.62665
+
+# use coeffiecnt
+coef(RevenueModel)
+
+RevenueModel$coef[1]+RevenueModel$coef[2]*300
+
+#Prediction Command using a value that is in te frame
+predict(RevenueModel, list(Revenue=15))
+
+#Expanding the range of prediction
+predict(RevenueModel, data.frame(Revenue=c(15, 20, 25)))
+#the value range can be increased as desired
+
+
+#confidence interval
+predict(RevenueModel, data.frame(Revenue=c(15, 20, 25)), interval="confidence", level=0.9)
+
+#prediction interval
+predict(RevenueModel, data.frame(Revenue=c(15, 20, 25)), interval="prediction", level=0.9)
+
+
+
